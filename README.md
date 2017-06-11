@@ -1,4 +1,5 @@
 Organizing Data
+
 Clean and Import Data
 Load the data by downloading the files and saving adding them. Training set is 19623X160 and test is 20X160
 The scrubbed data is 19623*153  and 20*153. “classes as last”
