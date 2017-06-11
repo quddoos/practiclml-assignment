@@ -1,5 +1,5 @@
-Organizing Data
 
+Organizing Data
 Clean and Import Data
 Load the data by downloading the files and saving adding them. Training set is 19623X160 and test is 20X160
 The scrubbed data is 19623*153  and 20*153. “classes as last”
@@ -53,8 +53,6 @@ Resampling results across tuning parameters:
 Accuracy was used to select the optimal model using  the largest value.
 The final value used for the model was cp = 0.03723.
 fancyRpartPlot(fit_rpart$finalModel)
- 
-
 Now create prediction using the validation set
 #get the predicton
 predict_rpart <- predict(fit_rpart, valid)
@@ -101,19 +99,13 @@ Balanced Accuracy      0.7256  0.68321  0.61006       NA  0.94360
 0.5004248
 
 Accuracy rate is .5 and out of sample error rate is 0.5
-
 classification tree is not predicting classes well enough.
 .
-
 Random forests
-
 Prediction using random forest method
-
 >fit_rf <- train(classe ~ ., data = train, method = "rf", 
                    trControl = control)
-
 print(fit_rf, digits = 4)
-
 > print(fit_rf, digits = 4);
 Random Forest 
 
@@ -132,15 +124,12 @@ Resampling results across tuning parameters:
   52    0.9859    0.9821
 
 Accuracy was used to select the optimal model using  the largest value.
-
 The final value used for the model was mtry = 2.
 
 
 Using the Validation set for RF predict result
-
 > predict_rf <- predict(fit_rf, valid)
 > (conf_rf <- confusionMatrix(valid$classe, predict_rf));
-
 Confusion Matrix and Statistics
 
           Reference
@@ -173,19 +162,13 @@ Detection Rate         0.2836   0.1918   0.1726   0.1604   0.1827
 Detection Prevalence   0.2845   0.1935   0.1743   0.1638   0.1839
 Balanced Accuracy      0.9970   0.9950   0.9898   0.9922   0.9970
 
-
-
 > (accuracy_rf <- conf_rf$overall[1]);
 Accuracy 
 0.991164
-
 As random forest is giving more accurate result and out of sample error is .009. 
-
 Although in terms of performance it took much longer to evaluate.
 Final Predictions using RANDOM FOREST
-
 We now use random forests to predict the outcome variable classe for the testing set.
 > (predict(fit_rf, test_data));
-
-[1] B A B A A E D B A A B C B A E E A B B B
+ [1] B A B A A E D B A A B C B A E E A B B B
 Levels: A B C D E
