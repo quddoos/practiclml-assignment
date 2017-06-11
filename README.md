@@ -1,6 +1,8 @@
 
-Organizing Data
-Clean and Import Data
+# Organizing Data
+
+# Clean and Import Data
+
 Load the data by downloading the files and saving adding them. Training set is 19623X160 and test is 20X160
 The scrubbed data is 19623*153  and 20*153. “classes as last”
 
@@ -20,15 +22,16 @@ test_data <- testing[, -c(1:7)]
 
 
 Partition Data
+
 In order to get out-of-sample errors, we split the cleaned training set training_data into a training set (train, 70%) for prediction and a validation set (valid 30%) to compute the out-of-sample errors.
 set.seed(7826) 
 inTrain <- createDataPartition(training_data$classe, p = 0.7, list = FALSE)
 train <- training_data[inTrain, ]
 valid <- training_data[-inTrain, ]
 
-RF and Classification Algos test
+# RF and Classification Algos test
 Using classification trees and random forest.
-Classification trees
+# Classification trees
 Using 5-fold cross validation
 
 >control <- trainControl(method = "cv", number = 5)
@@ -98,10 +101,10 @@ Balanced Accuracy      0.7256  0.68321  0.61006       NA  0.94360
  Accuracy 
 0.5004248
 
-Accuracy rate is .5 and out of sample error rate is 0.5
+# Accuracy rate is .5 and out of sample error rate is 0.5
 classification tree is not predicting classes well enough.
-.
-Random forests
+
+# Random forests
 Prediction using random forest method
 >fit_rf <- train(classe ~ ., data = train, method = "rf", 
                    trControl = control)
@@ -167,7 +170,9 @@ Accuracy
 0.991164
 As random forest is giving more accurate result and out of sample error is .009. 
 Although in terms of performance it took much longer to evaluate.
-Final Predictions using RANDOM FOREST
+
+# Final Predictions using RANDOM FOREST
+
 We now use random forests to predict the outcome variable classe for the testing set.
 > (predict(fit_rf, test_data));
  [1] B A B A A E D B A A B C B A E E A B B B
