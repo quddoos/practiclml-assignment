@@ -6,13 +6,14 @@
 Load the data by downloading the files and saving adding them. Training set is 196232X160 and test is 20X160
 The scrubbed data is 19622 with 53variable  and 20 and 53variables. “classes as last”
 
-#load the required packages
+# load the required packages
 library(caret); library(rattle); library(rpart); library(rpart.plot)
 library(randomForest); library(repmis)
 #import data and load data from local file
 training <- read.csv("C:\\projects\\practicleML\\pml-training.csv", na.strings = c("NA", ""))
 testing <- read.csv("C:\\projects\\practicleML\\pml-testing.csv", na.strings = c("NA", ""))
-#remove /null/empty values
+# remove /null/empty values
+
 training <- training[, colSums(is.na(training)) == 0]
 testing <- testing[, colSums(is.na(testing)) == 0]
 
@@ -21,7 +22,7 @@ training_data <- training[, -c(1:7)]
 test_data <- testing[, -c(1:7)]
 
 
-Partition Data
+# Partition Data
 
 In order to get out-of-sample errors, we split the cleaned training set training_data into a training set (train, 70%) for prediction and a validation set (valid 30%) to compute the out-of-sample errors.
 set.seed(7826) 
@@ -57,7 +58,8 @@ Accuracy was used to select the optimal model using  the largest value.
 The final value used for the model was cp = 0.03723.
 fancyRpartPlot(fit_rpart$finalModel)
 Now create prediction using the validation set
-#get the predicton
+# get the predicton
+
 predict_rpart <- predict(fit_rpart, valid)
 
 # Show result
@@ -101,7 +103,7 @@ Balanced Accuracy      0.7256  0.68321  0.61006       NA  0.94360
  Accuracy 
 0.5004248
 
-# Accuracy rate is .5 and out of sample error rate is 0.5
+Accuracy rate is .5 and out of sample error rate is 0.5
 classification tree is not predicting classes well enough.
 
 # Random forests
