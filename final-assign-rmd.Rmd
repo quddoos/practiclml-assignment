@@ -1,0 +1,126 @@
+
+---
+title: "pml-assign"
+author: "Abdul Q Khan"
+date: "June 11, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Organizing Data
+##Clean and Import Data
+Load the data by downloading the files and saving adding them. Training set is 19622X60 and test is 20X60
+The scrubbed data is 19622 with 53 variable  and 20 with 53 variables. “classes as last”
+
+
+```{r}
+install.packages('caret', dependencies = TRUE)
+library(rattle);
+library(RColorBrewer);
+library(rmarkdown);
+library(knitr);
+library(caret)
+library(randomForest)
+library(rpart)
+library(rpart.plot)
+library(repmis);
+#import data and load data from local file
+training <- read.csv("C:\\projects\\practicleML\\pml-training.csv", na.strings = c("NA", ""))
+testing <- read.csv("C:\\projects\\practicleML\\pml-testing.csv", na.strings = c("NA", ""))
+#remove /null/empty values
+training <- training[, colSums(is.na(training)) == 0]
+testing <- testing[, colSums(is.na(testing)) == 0]
+
+```
+
+
+Partition Data
+In order to get out-of-sample errors, we split the cleaned training set training_data into a training set (train, 70%) for prediction and a validation set (valid 30%) to compute the out-of-sample errors.
+# Also remove first seven columns/predictors as the does not impact predictions
+
+```{r}
+
+training_data <- training[, -c(1:7)]
+test_data <- testing[, -c(1:7)]
+set.seed(7826) 
+inTrain <- createDataPartition(training_data$classe, p = 0.7, list = FALSE)
+train <- training_data[inTrain, ]
+valid <- training_data[-inTrain, ]
+```
+
+
+##RF and Classification Algos test
+Using classification trees and random forest.
+Classification trees
+Using 5-fold cross validation
+
+```{r}
+
+
+control <- trainControl(method = "cv", number = 5)
+fit_rpart <- train(classe ~ ., data = train, method = "rpart", trControl = control)
+print(fit_rpart, digits = 4)
+fancyRpartPlot(fit_rpart$finalModel)
+```
+
+## Now create prediction using the validation set
+
+
+```{r}
+
+#get the predicton
+predict_rpart <- predict(fit_rpart, valid)
+(confusion_matpart <- confusionMatrix(valid$classe, predict_rpart))
+(accuracy_rpart <- confusion_matpart$overall[1])
+
+
+```
+## Accuracy for Classification tree
+Accuracy rate is .5 and out of sample error rate is 0.5
+classification tree is not predicting classes well enough.
+##Random forests
+
+Prediction using random forest method
+
+```{r}
+
+
+fit_rf <- train(classe ~ ., data = train, method = "rf", trControl = control)
+
+print(fit_rf, digits = 4)
+predict_rf <- predict(fit_rf, valid)
+(conf_rf <- confusionMatrix(valid$classe, predict_rf));
+
+```
+
+
+Using the Validation set for RF predict result
+
+
+
+```{r}
+
+(accuracy_rf <- conf_rf$overall[1]);
+
+```
+
+
+Accuracy 
+0.991164
+As random forest is giving more accurate result and out of sample error is .009. 
+Although in terms of performance it took much longer to evaluate.
+Final Predictions using RANDOM FOREST
+We now use random forests to predict the outcome variable classe for the testing set.
+```{r}
+ (predict(fit_rf, test_data));
+```
+
+We now use random forests to predict the outcome variable classe for the testing set.
+
+ [1] B A B A A E D B A A B C B A E E A B B B
+Levels: A B C D E
+
+
